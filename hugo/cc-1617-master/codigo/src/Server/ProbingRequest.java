@@ -5,6 +5,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 /* Fica a espera de um pedido de probing e lança uma resposta */
+/* Continuará a ser utilizado uma vez que o AgenteUDP vai estar sempre
+à espera do lado dos servidores secundários de um pedido */
 class ProbingRequest extends Thread{
 
     DatagramSocket serverSocket, serverSocketEnvio;
@@ -23,7 +25,7 @@ class ProbingRequest extends Thread{
         sendData = new byte[1024];
         enviar = new String("DATA");
         sendData = enviar.getBytes();
-        sendPacket = new DatagramPacket(sendData, sendData.length, iPAddress, 5555);
+        sendPacket = new DatagramPacket(sendData, sendData.length, iPAddress, porta);
     }
 
     public void run (){

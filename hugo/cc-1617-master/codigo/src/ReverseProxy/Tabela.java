@@ -30,8 +30,7 @@ class Tabela{
             server = new Servidor(address);
             listaServidores.put(address.toString(), server);
         }
-        server.receivedData(
-        );
+        server.receivedData();
     }
     
     public synchronized void cleanInactive(){

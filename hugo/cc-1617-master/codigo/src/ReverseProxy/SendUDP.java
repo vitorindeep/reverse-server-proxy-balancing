@@ -20,7 +20,7 @@ class SendUDP extends Thread{
             this.tabela = tabela;
             receivePacket = receivePacket;
             address = receivePacket.getAddress();
-            port = 5556;
+            port = 5556; // they just gone wild and don't need this field. if they needed, this would be a bug ahah
             serverSocketSend = new DatagramSocket();
             sendData = new byte[1024];
             sentence = "INFO";

@@ -5,7 +5,10 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-/* Esta thread envia de 10 em 10 segundos um sinal a avisar que está ativa. */ 
+/* Esta thread envia de 5 em 5 segundos um sinal a avisar que está ativa. */ 
+/* Vamos retirar daqui e colocar na parte do MonitorUDP do lado do proxy server,
+uma vez que vai passar a ser este o responsável por fazer a procura por novos
+servidores de X em X tempo. */
 class Signal extends Thread{
 	
 	DatagramSocket clientSocket;
