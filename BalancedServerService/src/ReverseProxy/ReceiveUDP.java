@@ -5,6 +5,7 @@
  */
 package ReverseProxy;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -43,7 +44,7 @@ public class ReceiveUDP extends Thread {
 
                 // Recebido um HELLO e pedido de informações diretamente
                 if (sentence.equals("HELLO")) {
-                    SendUDP sendProbingRequest = new SendUDP(receivePacket, tabela);
+                    ProbingRequest sendProbingRequest = new ProbingRequest(receivePacket, tabela);
                     sendProbingRequest.start();
                 } // Recebidos dados do Servidor
                 else if (sentence.equals("DATA")) {
@@ -51,7 +52,7 @@ public class ReceiveUDP extends Thread {
                 }
                 tabela.printEstado();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Error UDPReverseProxy.");
         }
     }
