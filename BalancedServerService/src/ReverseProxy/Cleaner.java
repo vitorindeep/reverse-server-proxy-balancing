@@ -21,6 +21,7 @@ public class Cleaner extends Thread {
     }
 
     /* Acorda de 20 em 20 segundos */
+    @Override
     public void run() {
         while (true) {
             try {

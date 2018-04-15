@@ -16,6 +16,7 @@ public class Servidor {
 
     InetAddress address;
     long rtt;
+    int cpu, ram, bandwidth;
     int port, pacotesTotais, pacotesPerdidos, nrConexoesTCP, nrVezesRTT;
     long lastSended, lastReceived;
 
