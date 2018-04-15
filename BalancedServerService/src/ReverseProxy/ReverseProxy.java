@@ -25,15 +25,15 @@ public class ReverseProxy {
             threadSinal.start();
             // Thread para receber as informações dos AgenteUDP
             ReceiveUDP recieveUDPDatagrams = new ReceiveUDP(tabela);
-            CleanInactives cleaner = new CleanInactives(tabela);
+            // Thread para limpar de 20 em 20 seg a tabela
+            Cleaner cleaner = new Cleaner(tabela);
 
             recieveUDPDatagrams.start();
             cleaner.start();
 
             /* Parte 2 */
-            Listener80 porta80 = new Listener80(tabela);
-            porta80.start();
-
+            //Listener80 porta80 = new Listener80(tabela);
+            //porta80.start();
         } catch (Exception e) {
             System.out.println("Erro UDPReverseProxy.");
         }
