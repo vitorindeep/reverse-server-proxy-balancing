@@ -17,9 +17,9 @@ import java.net.InetAddress;
 public class ProbingHandler extends Thread {
 
     DatagramSocket serverSocket, serverSocketEnvio;
-    DatagramPacket sendPacket, receivePacket;
-    byte[] receiveData, sendData;
-    String enviar;
+    DatagramPacket sendPacket, receivePacket, sendPacketHello;
+    byte[] receiveData, sendData, sendHello;
+    String enviar, enviarHello;
     InetAddress iPAddress;
 
     public ProbingHandler(InetAddress inetAddress, int porta) throws Exception {
@@ -29,6 +29,13 @@ public class ProbingHandler extends Thread {
         receiveData = new byte[1024];
         receivePacket = new DatagramPacket(receiveData, receiveData.length);
 
+        // HELLO do Server
+        sendHello = new byte[1024];
+        enviarHello = new String("HELLO");
+        sendHello = enviar.getBytes();
+        sendPacketHello = new DatagramPacket(sendHello, sendHello.length, iPAddress, porta);
+
+        // DATA do Server
         sendData = new byte[1024];
         enviar = new String("DATA");
         sendData = enviar.getBytes();
@@ -41,11 +48,18 @@ public class ProbingHandler extends Thread {
             try {
                 /* Fica a espera de pedido de informação */
                 serverSocket.receive(receivePacket);
-                System.out.println("Recebido pedido de info's.");
                 String sentence = new String(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
-                /* Se a mensagem for INFO envia dados */
 
-                if (sentence.equals("INFO")) {
+                // Recebido pedido de identificação
+                if (sentence.equals("ANYONE")) {
+                    System.out.println("Recebido SINAL.");
+                    /* Se a mensagem for INFO envia dados */
+                    serverSocketEnvio.send(sendPacketHello);
+                    System.out.println("Enviado HELLO.");
+                } // Recebido pedido de informação
+                else if (sentence.equals("INFO")) {
+                    System.out.println("Recebido pedido de info's.");
+                    /* Se a mensagem for INFO envia dados */
                     serverSocketEnvio.send(sendPacket);
                     System.out.println("Enviado data.");
                 }

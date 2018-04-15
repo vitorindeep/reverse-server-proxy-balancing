@@ -24,7 +24,7 @@ public class ReverseProxy {
             Signal threadSinal = new Signal();
             threadSinal.start();
             // Thread para receber as informações dos AgenteUDP
-            RecieveUDP recieveUDPDatagrams = new RecieveUDP(tabela);
+            ReceiveUDP recieveUDPDatagrams = new ReceiveUDP(tabela);
             CleanInactives cleaner = new CleanInactives(tabela);
 
             recieveUDPDatagrams.start();

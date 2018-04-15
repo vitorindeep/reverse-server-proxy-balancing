@@ -15,7 +15,7 @@ import java.net.SocketException;
  *
  * @author Vitor Castro
  */
-/* Esta thread envia de 5 em 5 segundos um sinal a pedir dados aos Agentes UDP. */
+/* Esta thread envia de 5 em 5 segundos um sinal a pedir dados aos AgenteUDP. */
 public class Signal extends Thread {
 
     DatagramSocket monitorSocket;
@@ -29,7 +29,7 @@ public class Signal extends Thread {
         // espaço para mensagem de pedido
         sendAreYouThere = new byte[1024];
         // mensagem a enviar pedido
-        sentenceGiveMeData = new String("INFO");
+        sentenceGiveMeData = new String("ANYONE");
         // transformar mensagem em bytes
         sendAreYouThere = sentenceGiveMeData.getBytes();
         // pacote a enviar
@@ -41,7 +41,7 @@ public class Signal extends Thread {
         while (true) {
             try {
                 monitorSocket.send(sendPacket);
-                System.out.println("Pedido de INFO enviado aos AgenteUDP.");
+                System.out.println("ANYONE enviado aos AgenteUDP em Multicast.");
                 Thread.sleep(5000);
             } catch (IOException | InterruptedException e) {
                 System.out.println("Error Signal");
