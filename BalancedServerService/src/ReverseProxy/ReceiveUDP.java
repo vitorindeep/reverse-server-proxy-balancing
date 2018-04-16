@@ -43,12 +43,7 @@ public class ReceiveUDP extends Thread {
                 System.out.println("% MonitorUDP: Pacote recebido em ReceiveUDP.");
                 sentence = new String(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
 
-                // Recebido um HELLO e pedido de informações diretamente
-                if (sentence.equals("HELLO")) {
-                    ProbingRequest sendProbingRequest = new ProbingRequest(receivePacket, tabela);
-                    sendProbingRequest.start();
-                } // Recebidos dados do Servidor
-                else if (sentence.equals("DATA")) {
+                if (sentence.equals("DATA")) {
                     tabela.receivedData(receivePacket.getAddress(), System.nanoTime());
                 }
                 tabela.printEstado();

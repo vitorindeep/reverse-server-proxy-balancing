@@ -21,7 +21,7 @@ public class ReverseProxy {
         try {
             /* Parte 1 */
             // Thread para fazer pedidos de 5 em 5 segundos
-            Signal threadSinal = new Signal();
+            Signal threadSinal = new Signal(tabela);
             // Thread para receber as informações dos AgenteUDP
             ReceiveUDP receiveUDPDatagrams = new ReceiveUDP(tabela);
             // Thread para limpar de 20 em 20 seg a tabela

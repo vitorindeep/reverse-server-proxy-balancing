@@ -20,10 +20,12 @@ import java.net.UnknownHostException;
 /* Esta thread envia de 5 em 5 segundos um sinal a pedir dados aos AgenteUDP. */
 public class Signal extends Thread {
 
+    final static String INET_ADDR = "239.8.8.8";
+    final static int PORT = 8888;
     DatagramSocket monitorSocket;
-    byte[] sendAreYouThere;
-    String sentenceGiveMeData;
-    DatagramPacket sendPacket;
+    String sentence;
+    DatagramPacket multicastPacket;
+    Tabela tabela;
 
     /*
     String msg;
@@ -31,18 +33,16 @@ public class Signal extends Thread {
     InetAddress group;
     MulticastSocket multicastSocket;
      */
-    public Signal() throws SocketException, UnknownHostException, IOException {
+    public Signal(Tabela tabela) throws SocketException, UnknownHostException, IOException {
 
         // abrir socket para o Monitor UDP fazer pedidos
         monitorSocket = new DatagramSocket();
-        // espaço para mensagem de pedido
-        sendAreYouThere = new byte[1024];
         // mensagem a enviar pedido
-        sentenceGiveMeData = new String("ANYONE");
-        // transformar mensagem em bytes
-        sendAreYouThere = sentenceGiveMeData.getBytes();
+        sentence = "INFO";
         // pacote a enviar
-        sendPacket = new DatagramPacket(sendAreYouThere, sendAreYouThere.length, InetAddress.getByName("10.1.1.1"), 8888);
+        multicastPacket = new DatagramPacket(sentence.getBytes(), sentence.getBytes().length, InetAddress.getByName(INET_ADDR), PORT);
+        // fornecer tabela de estado
+        this.tabela = tabela;
 
         /*
         // join a Multicast group and send the group salutations
@@ -58,12 +58,15 @@ public class Signal extends Thread {
     public void run() {
         while (true) {
             try {
-                monitorSocket.send(sendPacket);
+                // enviar mensagem em multicast
+                monitorSocket.send(multicastPacket);
+                // informar envio de multicast para calcular rtt
+                tabela.sendedProbingRequest();
                 /*
                 // Enviar a mensagem em multicast para o grupo
                 multicastSocket.send(hi);
                  */
-                System.out.println("ANYONE enviado aos AgenteUDP em Multicast.");
+                System.out.println("INFO enviado aos AgenteUDP em Multicast.");
                 Thread.sleep(5000);
             } catch (IOException | InterruptedException e) {
                 System.out.println("Error Signal");

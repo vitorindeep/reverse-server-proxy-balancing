@@ -8,6 +8,7 @@ package ReverseProxy;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -22,14 +23,16 @@ public class Tabela {
         listaServidores = new TreeMap<String, Servidor>();
     }
 
-    public synchronized void sendedProbingRequest(InetAddress address, long time) {
-        Servidor server = listaServidores.get(address.toString());
+    public synchronized void sendedProbingRequest() {
+        Servidor server;
 
-        if (server == null) {
-            server = new Servidor(address);
-            listaServidores.put(address.toString(), server);
+        // iterar pelos servidores e zerar para fazer conta ao rtt
+        for (Map.Entry<String, Servidor> entry : listaServidores.entrySet()) {
+
+            Servidor value = entry.getValue();
+
+            value.sendedProbingRequest();
         }
-        server.sendedProbingRequest();
     }
 
     public synchronized void receivedData(InetAddress address, long time) {
