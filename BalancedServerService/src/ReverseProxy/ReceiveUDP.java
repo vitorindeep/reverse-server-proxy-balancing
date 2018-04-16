@@ -50,7 +50,9 @@ public class ReceiveUDP extends Thread {
                 }
 
                 if (result[0].equals("DATA")) { // se a posição 0 diz DATA
-                    tabela.receivedData(receivePacket.getAddress(), System.nanoTime());
+                    double cpu = Double.parseDouble(result[1]);
+                    double ram = Double.parseDouble(result[2]);
+                    tabela.receivedData(receivePacket.getAddress(), cpu, ram); // result[1] = cpu; result[2] = ram;
                 }
                 tabela.printEstado();
             }

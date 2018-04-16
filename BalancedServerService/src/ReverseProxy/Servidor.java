@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 public class Servidor {
 
     InetAddress address;
-    long rtt;
-    long cpu, ram, bandwidth;
+    long rtt, bandwidth;
+    double cpu, ram;
     int port, pacotesTotais, pacotesPerdidos, nrConexoesTCP, nrVezesRTT;
     long lastSended, lastReceived;
 
@@ -27,7 +27,8 @@ public class Servidor {
     public Servidor(InetAddress address) {
         this.address = address;
         rtt = 0;
-        cpu = ram = bandwidth = 1L;
+        bandwidth = 1L;
+        cpu = ram = 0;
         pacotesTotais = pacotesPerdidos = nrConexoesTCP = nrVezesRTT = 0;
         lastReceived = lastSended = 0;
     }
@@ -54,7 +55,7 @@ public class Servidor {
         pacotesTotais++;
     }
 
-    public synchronized void receivedData() {
+    public synchronized void receivedData(double cpu, double ram) {
         if (lastSended == 0) {
             return;
         }
@@ -62,6 +63,8 @@ public class Servidor {
         lastReceived = System.nanoTime();
         long tempo = lastReceived - lastSended;
         rtt = (rtt * nrVezesRTT + tempo) / (++nrVezesRTT);
+        this.cpu = cpu;
+        this.ram = ram;
         lastSended = 0;
     }
 
@@ -78,7 +81,7 @@ public class Servidor {
 
     @Override
     public String toString() {
-        return address.toString() + " / RTT: " + rtt + " / Conexoes: " + nrConexoesTCP + " / Inativo à "
+        return address.toString() + " / RTT: " + rtt + " / CPUUsage: " + cpu + " / RAMLeft: " + ram + " / Conexoes: " + nrConexoesTCP + " / Inativo à "
                 + TimeUnit.NANOSECONDS.toSeconds((System.nanoTime() - lastReceived)) + " / Pacotes perdidos: "
                 + pacotesPerdidos + "/" + pacotesTotais;
     }

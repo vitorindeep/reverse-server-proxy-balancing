@@ -56,51 +56,27 @@ public class ProbingHandler extends Thread {
     public void run() {
         while (true) {
             try {
-
+                // Esperar por mensagens
                 multicastSocket.receive(receivePacket);
-
+                // Obter a mensagem
                 receivedSentence = new String(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
 
+                // Se a mensagem for INFO envia dados
                 if (receivedSentence.equals("INFO")) {
                     System.out.println("Recebido pedido de info's.");
                     // Obter os dados de CPU e RAM deste momento
                     double cpu = bean.getSystemCpuLoad();
                     double ram = bean.getFreePhysicalMemorySize();
-                    System.out.println("CPU: " + cpu); // teste
-                    System.out.println("RAM: " + ram); // teste
+                    //System.out.println("CPU: " + cpu); // teste
+                    //System.out.println("RAM: " + ram); // teste
                     sendSentence = "DATA," + cpu + "," + ram;
                     // criar o PDU
                     sendPacket = new DatagramPacket(sendSentence.getBytes(), sendSentence.getBytes().length, receivePacket.getAddress(), 8888);
-                    // Se a mensagem for INFO envia dados
+                    // enviar o PDU
                     serverSocketEnvio.send(sendPacket);
                     System.out.println("Enviado data.");
                 }
 
-                /*
-                // Fica a espera de pedido de informação
-                System.out.println("Waiting for SIGNAL.");
-                serverSocket.receive(receivePacket);
-                String sentence = new String(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
-
-                // Recebido pedido de identificação
-                if (sentence.equals("ANYONE")) {
-                    System.out.println("Recebido SINAL.");
-                    sendPacketHello = new DatagramPacket(sendHello, sendHello.length, receivePacket.getAddress(), 8888);
-                    // Se a mensagem for INFO envia dados
-                    serverSocketEnvio.send(sendPacketHello);
-                    System.out.println("Enviado HELLO.");
-                } // Recebido pedido de informação
-                else if (sentence.equals("INFO")) {
-                    System.out.println("Recebido pedido de info's.");
-                    sendPacket = new DatagramPacket(sendData, sendData.length, receivePacket.getAddress(), 8888);
-                    // Obter os dados de CPU e RAM deste momento
-                    System.out.println(bean.getProcessCpuLoad()); // teste
-                    System.out.println(bean.getSystemCpuLoad()); // teste
-                    // Se a mensagem for INFO envia dados
-                    serverSocketEnvio.send(sendPacket);
-                    System.out.println("Enviado data.");
-                }
-                 */
             } catch (IOException e) {
                 System.out.println("Error ProbingHandler.");
                 return;

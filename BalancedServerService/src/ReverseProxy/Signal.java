@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -27,12 +26,6 @@ public class Signal extends Thread {
     DatagramPacket multicastPacket;
     Tabela tabela;
 
-    /*
-    String msg;
-    DatagramPacket hi;
-    InetAddress group;
-    MulticastSocket multicastSocket;
-     */
     public Signal(Tabela tabela) throws SocketException, UnknownHostException, IOException {
 
         // abrir socket para o Monitor UDP fazer pedidos
@@ -43,15 +36,6 @@ public class Signal extends Thread {
         multicastPacket = new DatagramPacket(sentence.getBytes(), sentence.getBytes().length, InetAddress.getByName(INET_ADDR), PORT);
         // fornecer tabela de estado
         this.tabela = tabela;
-
-        /*
-        // join a Multicast group and send the group salutations
-        msg = "ANYONE";
-        group = InetAddress.getByName("255.255.255.0");
-        multicastSocket = new MulticastSocket(); // multicast feito pela porta
-        multicastSocket.joinGroup(group);
-        hi = new DatagramPacket(msg.getBytes(), msg.length(), group, 8888); // para a porta 8888
-         */
     }
 
     @Override
@@ -62,10 +46,7 @@ public class Signal extends Thread {
                 monitorSocket.send(multicastPacket);
                 // informar envio de multicast para calcular rtt
                 tabela.sendedProbingRequest();
-                /*
-                // Enviar a mensagem em multicast para o grupo
-                multicastSocket.send(hi);
-                 */
+
                 System.out.println("INFO enviado aos AgenteUDP em Multicast.");
                 Thread.sleep(5000);
             } catch (IOException | InterruptedException e) {

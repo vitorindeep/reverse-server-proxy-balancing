@@ -5,7 +5,6 @@
  */
 package ReverseProxy;
 
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class Tabela {
         }
     }
 
-    public synchronized void receivedData(InetAddress address, long time) {
+    public synchronized void receivedData(InetAddress address, double cpu, double ram) {
         Servidor server = listaServidores.get(address.toString());
 
         if (server == null) {
@@ -43,12 +42,7 @@ public class Tabela {
             listaServidores.put(address.toString(), server);
         }
 
-        // Obter RAM e CPU
-        String[] result = "this is a test".split(","); // separar nas vírgulas
-        //    for (int x=0; x<result.length; x++)
-        // System.out.println(result[x]); // Só para testar
-        // Atualizar servidor
-        server.receivedData();
+        server.receivedData(cpu, ram);
     }
 
     public synchronized void cleanInactive() {
