@@ -16,7 +16,7 @@ public class Servidor {
 
     InetAddress address;
     long rtt;
-    int cpu, ram, bandwidth;
+    long cpu, ram, bandwidth;
     int port, pacotesTotais, pacotesPerdidos, nrConexoesTCP, nrVezesRTT;
     long lastSended, lastReceived;
 
@@ -27,6 +27,7 @@ public class Servidor {
     public Servidor(InetAddress address) {
         this.address = address;
         rtt = 0;
+        cpu = ram = bandwidth = 1L;
         pacotesTotais = pacotesPerdidos = nrConexoesTCP = nrVezesRTT = 0;
         lastReceived = lastSended = 0;
     }

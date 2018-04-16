@@ -61,7 +61,7 @@ public class Tabela {
         }
     }
 
-    /* Melhor RTT */
+    /* Melhor RTT */ // -> A MODIFICAR PARA CALCULAR COM CPU E RAM TMB
     public synchronized InetAddress getBestServer() {
         InetAddress melhorAddress = null;
         float rtt = -1;
