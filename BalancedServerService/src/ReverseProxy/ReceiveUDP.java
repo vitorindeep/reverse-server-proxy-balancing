@@ -40,6 +40,7 @@ public class ReceiveUDP extends Thread {
                 receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 // Ficar à espera pelos dados dos AgenteUDP
                 serverSocket.receive(receivePacket);
+                System.out.println("% MonitorUDP: Pacote recebido em ReceiveUDP.");
                 sentence = new String(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
 
                 // Recebido um HELLO e pedido de informações diretamente

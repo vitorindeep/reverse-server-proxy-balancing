@@ -38,13 +38,11 @@ public class ProbingHandler extends Thread {
         sendHello = new byte[1024];
         enviarHello = new String("HELLO");
         sendHello = enviarHello.getBytes();
-        sendPacketHello = new DatagramPacket(sendHello, sendHello.length, iPAddress, porta);
 
         // DATA do Server
         sendData = new byte[1024];
         enviar = new String("DATA");
         sendData = enviar.getBytes();
-        sendPacket = new DatagramPacket(sendData, sendData.length, iPAddress, porta);
     }
 
     @Override
@@ -52,18 +50,21 @@ public class ProbingHandler extends Thread {
         while (true) {
             try {
                 /* Fica a espera de pedido de informação */
+                System.out.println("Waiting for SIGNAL.");
                 serverSocket.receive(receivePacket);
                 String sentence = new String(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
 
                 // Recebido pedido de identificação
                 if (sentence.equals("ANYONE")) {
                     System.out.println("Recebido SINAL.");
+                    sendPacketHello = new DatagramPacket(sendHello, sendHello.length, receivePacket.getAddress(), 8888);
                     /* Se a mensagem for INFO envia dados */
                     serverSocketEnvio.send(sendPacketHello);
                     System.out.println("Enviado HELLO.");
                 } // Recebido pedido de informação
                 else if (sentence.equals("INFO")) {
                     System.out.println("Recebido pedido de info's.");
+                    sendPacket = new DatagramPacket(sendData, sendData.length, receivePacket.getAddress(), 8888);
                     // Obter os dados de CPU e RAM deste momento
                     System.out.println(bean.getProcessCpuLoad()); // teste
                     System.out.println(bean.getSystemCpuLoad()); // teste
