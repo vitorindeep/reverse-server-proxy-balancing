@@ -29,9 +29,9 @@ public class Signal extends Thread {
         // join a Multicast group and send the group salutations
         msg = "ANYONE";
         group = InetAddress.getByName("239.8.8.8");
-        multicastSocket = new MulticastSocket(8888);
+        multicastSocket = new MulticastSocket(); // multicast feito pela porta
         multicastSocket.joinGroup(group);
-        hi = new DatagramPacket(msg.getBytes(), msg.length(), group, 8888);
+        hi = new DatagramPacket(msg.getBytes(), msg.length(), group, 8888); // para a porta 8888
     }
 
     @Override

@@ -26,7 +26,8 @@ public class ProbingHandler extends Thread {
     OperatingSystemMXBean bean;
 
     public ProbingHandler(InetAddress inetAddress, int porta) throws Exception {
-        serverSocket = new DatagramSocket(porta);
+
+        serverSocket = new DatagramSocket(8888); // nao funciona na mm maquina por causa das ports iguais
         serverSocketEnvio = new DatagramSocket();
         iPAddress = inetAddress;
         receiveData = new byte[1024];
@@ -36,7 +37,7 @@ public class ProbingHandler extends Thread {
         // HELLO do Server
         sendHello = new byte[1024];
         enviarHello = new String("HELLO");
-        sendHello = enviar.getBytes();
+        sendHello = enviarHello.getBytes();
         sendPacketHello = new DatagramPacket(sendHello, sendHello.length, iPAddress, porta);
 
         // DATA do Server

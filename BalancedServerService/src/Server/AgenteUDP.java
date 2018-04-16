@@ -21,6 +21,8 @@ public class AgenteUDP {
             ProbingHandler threadProbing = new ProbingHandler(inetAddress, porta);
             threadProbing.start();
 
+            System.out.println("$ AgenteUDP: Waiting for reverseProxy calls.");
+
         } catch (Exception e) {
             System.out.println("Erro ao estabelecer conexão com o proxy reverso.");
         }
