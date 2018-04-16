@@ -50,7 +50,6 @@ public class ProbingHandler extends Thread {
 
         // DATA do Server
         sendData = new byte[1024];
-        sendSentence = "DATA";
     }
 
     @Override
@@ -64,10 +63,14 @@ public class ProbingHandler extends Thread {
 
                 if (receivedSentence.equals("INFO")) {
                     System.out.println("Recebido pedido de info's.");
-                    sendPacket = new DatagramPacket(sendSentence.getBytes(), sendSentence.getBytes().length, receivePacket.getAddress(), 8888);
                     // Obter os dados de CPU e RAM deste momento
-                    System.out.println(bean.getProcessCpuLoad()); // teste
-                    System.out.println(bean.getSystemCpuLoad()); // teste
+                    double cpu = bean.getSystemCpuLoad();
+                    double ram = bean.getFreePhysicalMemorySize();
+                    System.out.println("CPU: " + cpu); // teste
+                    System.out.println("RAM: " + ram); // teste
+                    sendSentence = "DATA," + cpu + "," + ram;
+                    // criar o PDU
+                    sendPacket = new DatagramPacket(sendSentence.getBytes(), sendSentence.getBytes().length, receivePacket.getAddress(), 8888);
                     // Se a mensagem for INFO envia dados
                     serverSocketEnvio.send(sendPacket);
                     System.out.println("Enviado data.");

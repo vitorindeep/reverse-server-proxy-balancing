@@ -43,7 +43,13 @@ public class ReceiveUDP extends Thread {
                 System.out.println("% MonitorUDP: Pacote recebido em ReceiveUDP.");
                 sentence = new String(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
 
-                if (sentence.equals("DATA")) {
+                // Obter dados da sentence
+                String[] result = sentence.split(","); // separar nas vírgulas
+                for (String token : result) {
+                    System.out.println(token); // Só para testar RAM e CPU
+                }
+
+                if (result[0].equals("DATA")) { // se a posição 0 diz DATA
                     tabela.receivedData(receivePacket.getAddress(), System.nanoTime());
                 }
                 tabela.printEstado();
