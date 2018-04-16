@@ -21,10 +21,13 @@ public class ReverseProxy {
         try {
             /* Parte 1 */
             // Thread para fazer pedidos de 5 em 5 segundos
+            System.out.println("Erro 1.");
             Signal threadSinal = new Signal();
             // Thread para receber as informações dos AgenteUDP
+            System.out.println("Erro 2.");
             ReceiveUDP recieveUDPDatagrams = new ReceiveUDP(tabela);
             // Thread para limpar de 20 em 20 seg a tabela
+            System.out.println("Erro 3.");
             Cleaner cleaner = new Cleaner(tabela);
 
             threadSinal.start();
@@ -34,7 +37,7 @@ public class ReverseProxy {
             /* Parte 2 */
             //Listener80 porta80 = new Listener80(tabela);
             //porta80.start();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Erro UDPReverseProxy.");
         }
     }

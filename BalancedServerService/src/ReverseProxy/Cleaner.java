@@ -28,6 +28,7 @@ public class Cleaner extends Thread {
                 Thread.sleep(20000);
                 tabela.cleanInactive();
             } catch (InterruptedException ex) {
+                System.out.println("Erro Cleaner.");
                 Logger.getLogger(Cleaner.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

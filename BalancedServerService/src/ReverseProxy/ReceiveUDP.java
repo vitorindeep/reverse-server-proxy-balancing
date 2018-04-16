@@ -53,7 +53,7 @@ public class ReceiveUDP extends Thread {
                 tabela.printEstado();
             }
         } catch (IOException e) {
-            System.out.println("Error UDPReverseProxy.");
+            System.out.println("Error ReceiveUDP.");
         }
     }
 }
