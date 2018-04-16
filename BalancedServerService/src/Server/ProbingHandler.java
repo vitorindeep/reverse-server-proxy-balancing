@@ -5,7 +5,9 @@
  */
 package Server;
 
+import com.sun.management.OperatingSystemMXBean;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -21,6 +23,7 @@ public class ProbingHandler extends Thread {
     byte[] receiveData, sendData, sendHello;
     String enviar, enviarHello;
     InetAddress iPAddress;
+    OperatingSystemMXBean bean;
 
     public ProbingHandler(InetAddress inetAddress, int porta) throws Exception {
         serverSocket = new DatagramSocket(porta);
@@ -28,6 +31,7 @@ public class ProbingHandler extends Thread {
         iPAddress = inetAddress;
         receiveData = new byte[1024];
         receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        bean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
         // HELLO do Server
         sendHello = new byte[1024];
@@ -59,6 +63,9 @@ public class ProbingHandler extends Thread {
                 } // Recebido pedido de informação
                 else if (sentence.equals("INFO")) {
                     System.out.println("Recebido pedido de info's.");
+                    // Obter os dados de CPU e RAM deste momento
+                    System.out.println(bean.getProcessCpuLoad()); // teste
+                    System.out.println(bean.getSystemCpuLoad()); // teste
                     /* Se a mensagem for INFO envia dados */
                     serverSocketEnvio.send(sendPacket);
                     System.out.println("Enviado data.");

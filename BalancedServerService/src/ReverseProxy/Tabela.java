@@ -39,6 +39,12 @@ public class Tabela {
             server = new Servidor(address);
             listaServidores.put(address.toString(), server);
         }
+
+        // Obter RAM e CPU
+        String[] result = "this is a test".split("\\s");
+        //    for (int x=0; x<result.length; x++)
+        // System.out.println(result[x]); // Só para testar
+        // Atualizar servidor
         server.receivedData();
     }
 
