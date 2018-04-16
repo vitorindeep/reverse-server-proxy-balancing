@@ -41,7 +41,7 @@ public class Tabela {
         }
 
         // Obter RAM e CPU
-        String[] result = "this is a test".split("\\s");
+        String[] result = "this is a test".split(","); // separar nas vírgulas
         //    for (int x=0; x<result.length; x++)
         // System.out.println(result[x]); // Só para testar
         // Atualizar servidor
