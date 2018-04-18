@@ -9,6 +9,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -23,14 +29,22 @@ public class ReceiveUDP extends Thread {
     String sentence;
     DatagramPacket receivePacket;
     long time;
+    // HMAC
+    String consumerSecret = "CCPodiaSerMelhor";
+    String algorithm = "HMACSHA256";
+    SecretKey hmacKey;
+    Mac mac;
 
-    public ReceiveUDP(Tabela tabela) throws SocketException {
+    public ReceiveUDP(Tabela tabela) throws SocketException, NoSuchAlgorithmException, InvalidKeyException {
         /* Fica à escuta na porta 8888 */
         serverSocket = new DatagramSocket(8888);
         // espaço para dados recebidos
         receiveData = new byte[1024];
         this.tabela = tabela;
         time = 0;
+        hmacKey = new SecretKeySpec(consumerSecret.getBytes(), algorithm);
+        mac = Mac.getInstance(algorithm);
+        mac.init(hmacKey);
     }
 
     @Override
@@ -45,11 +59,18 @@ public class ReceiveUDP extends Thread {
 
                 // Obter dados da sentence
                 String[] result = sentence.split(","); // separar nas vírgulas
+                /* Só para testar valores de RAM e CPU
                 for (String token : result) {
-                    System.out.println(token); // Só para testar RAM e CPU
+                    System.out.println(token);
                 }
+                 */
 
-                if (result[0].equals("DATA")) { // se a posição 0 diz DATA
+                // Verificar assinatura
+                byte[] digest = mac.doFinal((result[1] + result[2]).getBytes());
+                String securityCheck = new String(digest);
+
+                if (Objects.equals(result[3], securityCheck) // comparar a hash gerada pelo cliente com a nossa
+                        && result[0].equals("DATA")) { // se a posição 0 diz DATA
                     double cpu = Double.parseDouble(result[1]);
                     double ram = Double.parseDouble(result[2]);
                     tabela.receivedData(receivePacket.getAddress(), cpu, ram); // result[1] = cpu; result[2] = ram;
