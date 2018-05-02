@@ -69,6 +69,7 @@ public class Servidor {
     }
 
     /* Caso esteja mais que 30 segundos ausente devolve true */
+    // FAZER BLACKLIST
     public boolean inactive() {
         long nanosAusente = (System.nanoTime() - lastReceived);
         /* segundos */
@@ -81,7 +82,7 @@ public class Servidor {
 
     @Override
     public String toString() {
-        return address.toString() + " / RTT: " + rtt + " / CPUUsage: " + cpu + " / RAMLeft: " + ram + " / Conexoes: " + nrConexoesTCP + " / Inativo à "
+        return address.toString() + " / RTT: " + rtt + " / CPUUsage: " + cpu + " / RAMLeft: " + ram + " / Conexoes: " + nrConexoesTCP + " / Inativo há "
                 + TimeUnit.NANOSECONDS.toSeconds((System.nanoTime() - lastReceived)) + " / Pacotes perdidos: "
                 + pacotesPerdidos + "/" + pacotesTotais;
     }
