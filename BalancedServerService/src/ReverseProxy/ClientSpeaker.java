@@ -39,8 +39,11 @@ public class ClientSpeaker extends Thread {
 
         try {
             while ((bytesRead = streamFromServer.read(reply)) != -1) {
+                // Passar a mensagem ao cliente
                 streamToClient.write(reply, 0, bytesRead);
                 streamToClient.flush();
+                // Atualizar o total de bytes que veio do servidor (para calcular bandwidth)
+                tabela.addBandBytes(address.toString(), bytesRead);
             }
         } catch (IOException e) {
         }

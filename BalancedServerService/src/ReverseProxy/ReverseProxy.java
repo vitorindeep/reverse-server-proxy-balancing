@@ -33,7 +33,11 @@ public class ReverseProxy {
             /* Parte 2 */
             // Thread que fica à escuta na porta 80, no Reverse Proxy, por conexões externas
             Listener80 porta80 = new Listener80(tabela);
+            // Thread que a cada 5 segundos corre para dar update à bandwidth utilizada por casa servidor
+            BandwidthCalculator bandwidther = new BandwidthCalculator(tabela);
+
             porta80.start();
+            bandwidther.start();
 
         } catch (IOException e) {
             System.out.println("Erro UDPReverseProxy.");

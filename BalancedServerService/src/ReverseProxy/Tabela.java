@@ -58,6 +58,18 @@ public class Tabela {
         }
     }
 
+    public synchronized void refreshBandwidth() {
+        Servidor server;
+
+        // iterar pelos servidores e zerar para fazer conta ao rtt
+        for (Map.Entry<String, Servidor> entry : listaServidores.entrySet()) {
+
+            Servidor value = entry.getValue();
+
+            value.shortBandwidth();
+        }
+    }
+
     /* Melhor RTT */ // -> A MODIFICAR PARA CALCULAR COM CPU E RAM TMB
     public synchronized InetAddress getBestServer() {
         InetAddress melhorAddress = null;
@@ -79,6 +91,14 @@ public class Tabela {
         return melhorAddress;
     }
 
+    public void addBandBytes(String address, int bytesRead) {
+        Servidor server = this.listaServidores.get(address);
+        if (server == null) {
+            return;
+        }
+        server.increaseBandBytes(bytesRead);
+    }
+
     public synchronized void endedService(String address) {
         Servidor server = this.listaServidores.get(address);
         if (server == null) {
@@ -96,4 +116,5 @@ public class Tabela {
         System.out.println("-----------------------------------");
         System.out.println();
     }
+
 }

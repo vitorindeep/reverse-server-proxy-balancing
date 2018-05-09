@@ -42,7 +42,7 @@ public class Listener80 extends Thread {
                 } else {
                     try {
                         // Abrir socket 80 para receber pedidos externos
-                        servidor = new Socket(addressServidor, 80);
+                        servidor = new Socket(addressServidor, 80); // só para uma conexão por servidor
                         System.out.println("Servidor escolhido: " + addressServidor.toString());
                         final InputStream streamFromServer = servidor.getInputStream();
                         final OutputStream streamToServer = servidor.getOutputStream();
@@ -50,8 +50,8 @@ public class Listener80 extends Thread {
                         final OutputStream streamToClient = client.getOutputStream();
 
                         // Mecanismos de diálogo entre cliente e servidor transparentes
-                        // Para calcular bandwidth: long bandwidthUsed = (totalBytes / 1024) / elapsedTimeSeconds;
-                        ClientListener listenToClient = new ClientListener(streamToServer, streamFromClient);
+                        // Passar qual o servidor para podermos indicar o total de bytes usados relativamente ao mesmo
+                        ClientListener listenToClient = new ClientListener(streamToServer, streamFromClient, tabela, addressServidor);
                         ClientSpeaker speakToClient = new ClientSpeaker(streamToClient, streamFromServer, tabela, addressServidor);
                         listenToClient.start();
                         speakToClient.start();

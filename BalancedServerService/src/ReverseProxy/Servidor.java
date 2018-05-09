@@ -17,12 +17,13 @@ import java.util.concurrent.TimeUnit;
 public class Servidor {
 
     InetAddress address;
-    long rtt, bandwidth;
+    long rtt;
     double cpu;
-    int port, pacotesTotais, pacotesPerdidos, nrConexoesTCP, nrVezesRTT;
-    long lastSended, lastReceived;
     Queue<Double> ramFifo; // fifo to store the last 12 ram values (1 minute)
     Queue<Double> bandwidthFifo; // fifo to store the last 12 bandwidth values (1 minute)
+    int totalBandBytes;
+    int port, pacotesTotais, pacotesPerdidos, nrConexoesTCP, nrVezesRTT;
+    long lastSended, lastReceived;
 
     public InetAddress getAddress() {
         return address;
@@ -31,16 +32,27 @@ public class Servidor {
     public Servidor(InetAddress address) {
         this.address = address;
         rtt = 0;
-        bandwidth = 1L;
         cpu = 0;
-        pacotesTotais = pacotesPerdidos = nrConexoesTCP = nrVezesRTT = 0;
-        lastReceived = lastSended = 0;
         ramFifo = new CircularFifoQueue<Double>(12);
         bandwidthFifo = new CircularFifoQueue<Double>(12);
+        totalBandBytes = 0;
+        pacotesTotais = pacotesPerdidos = nrConexoesTCP = nrVezesRTT = 0;
+        lastReceived = lastSended = 0;
     }
 
     public float getRtt() {
         return rtt;
+    }
+
+    // This is called by a thread that runs every 5 seconds
+    // to calculate the bandwidth used in that period of time
+    public void shortBandwidth() {
+        // calculate bandwidth over the last 5 seconds
+        double bandwidth = totalBandBytes / 5;
+        // clean amount of bytes until now
+        totalBandBytes = 0;
+
+        bandwidthFifo.add(bandwidth);
     }
 
     public double getAverageCpu() {
@@ -48,7 +60,6 @@ public class Servidor {
     }
 
     public double getAverageRamLeft() {
-
         double total = 0;
 
         for (Double ram : ramFifo) {
@@ -59,7 +70,6 @@ public class Servidor {
     }
 
     public double getAverageBandwidth() {
-
         double total = 0;
 
         for (Double band : bandwidthFifo) {
@@ -67,6 +77,10 @@ public class Servidor {
         }
 
         return (total / 12);
+    }
+
+    public void increaseBandBytes(int bytesRead) {
+        this.totalBandBytes += bytesRead;
     }
 
     public void decrementaNrConexoes() {
@@ -121,4 +135,5 @@ public class Servidor {
                 + " / Inativo há " + TimeUnit.NANOSECONDS.toSeconds((System.nanoTime() - lastReceived))
                 + " / Pacotes perdidos: " + pacotesPerdidos + "/" + pacotesTotais;
     }
+
 }
