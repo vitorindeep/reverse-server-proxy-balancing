@@ -32,7 +32,7 @@ public class Listener80 extends Thread {
             while (true) {
                 Socket client = server.accept();
                 Socket servidor = null;
-                InetAddress addressServidor = this.tabela.getBestServer();
+                InetAddress addressServidor = this.tabela.getBestServer(); // aumenta o nr conexoes na tabela para aquele servidor
 
                 if (addressServidor == null) {
                     /* Se nao existir servidores é descartado a tentativa de conexao */
@@ -41,6 +41,7 @@ public class Listener80 extends Thread {
                     continue;
                 } else {
                     try {
+                        // Abrir socket 80 para receber pedidos externos
                         servidor = new Socket(addressServidor, 80);
                         System.out.println("Servidor escolhido: " + addressServidor.toString());
                         final InputStream streamFromServer = servidor.getInputStream();
@@ -48,10 +49,13 @@ public class Listener80 extends Thread {
                         final InputStream streamFromClient = client.getInputStream();
                         final OutputStream streamToClient = client.getOutputStream();
 
-                        //ClientListener listener = new ClientListener(streamToServer, streamFromClient);
-                        //ClientSpeaker speaker = new ClientSpeaker(streamToClient, streamFromServer, tabela, addressServidor);
-                        //listener.start();
-                        //speaker.start();
+                        // Mecanismos de diálogo entre cliente e servidor transparentes
+                        // Para calcular bandwidth: long bandwidthUsed = (totalBytes / 1024) / elapsedTimeSeconds;
+                        ClientListener listenToClient = new ClientListener(streamToServer, streamFromClient);
+                        ClientSpeaker speakToClient = new ClientSpeaker(streamToClient, streamFromServer, tabela, addressServidor);
+                        listenToClient.start();
+                        speakToClient.start();
+
                     } catch (IOException e) {
                         System.out.println("Something wrong here! " + e.getMessage());
                         client.close();

@@ -16,6 +16,7 @@ public class ReverseProxy {
     public static void main(String args[]) throws Exception {
         /* Cria tabela de registo de servidores secundários */
         Tabela tabela = new Tabela();
+
         try {
             /* Parte 1 */
             // Thread para fazer pedidos de 5 em 5 segundos
@@ -30,8 +31,10 @@ public class ReverseProxy {
             cleaner.start();
 
             /* Parte 2 */
-            //Listener80 porta80 = new Listener80(tabela);
-            //porta80.start();
+            // Thread que fica à escuta na porta 80, no Reverse Proxy, por conexões externas
+            Listener80 porta80 = new Listener80(tabela);
+            porta80.start();
+
         } catch (IOException e) {
             System.out.println("Erro UDPReverseProxy.");
         }
