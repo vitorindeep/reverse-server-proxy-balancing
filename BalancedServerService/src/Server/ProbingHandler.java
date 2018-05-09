@@ -79,7 +79,7 @@ public class ProbingHandler extends Thread {
                 if (receivedSentence.equals("INFO")) {
                     System.out.println("Recebido pedido de info's.");
                     // Obter os dados de CPU e RAM deste momento e converter para String
-                    double cpu = bean.getSystemCpuLoad();
+                    double cpu = bean.getSystemLoadAverage(); // measured in the last minute
                     double ram = bean.getFreePhysicalMemorySize();
                     String scpu = String.valueOf(cpu);
                     String sram = String.valueOf(ram);
