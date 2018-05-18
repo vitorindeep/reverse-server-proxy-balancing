@@ -1,4 +1,4 @@
-mini-httpd nos agentes
+mini-httpd nos agentes ( http://manpages.ubuntu.com/manpages/trusty/man8/mini-httpd.8.html )
 Server.AgenteUDP pela bash do agente que queremos, a partir do desktop
 
 ReverseProxy.ReverseProxy pela bash do servidor, a partir do desktop

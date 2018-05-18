@@ -61,7 +61,7 @@ public class Tabela {
     public synchronized void refreshBandwidth() {
         Servidor server;
 
-        // iterar pelos servidores e zerar para fazer conta ao rtt
+        // iterar pelos servidores e zerar para fazer conta ao bandwidth
         for (Map.Entry<String, Servidor> entry : listaServidores.entrySet()) {
 
             Servidor value = entry.getValue();
