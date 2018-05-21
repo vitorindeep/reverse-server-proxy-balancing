@@ -1,5 +1,11 @@
-mini-httpd nos agentes ( http://manpages.ubuntu.com/manpages/trusty/man8/mini-httpd.8.html )
-Server.AgenteUDP pela bash do agente que queremos, a partir do desktop
+Na diretoria /home/core/Desktop
 
-ReverseProxy.ReverseProxy pela bash do servidor, a partir do desktop
+AGENTES:
+mini-httpd
+java Server.AgenteUDP
 
+REVERSE PROXY:
+java -cp ".:commons-collections4-4.1.jar" ReverseProxy.ReverseProxy
+
+CLIENTES:
+wget @endereço do proxy server@:80\filename
