@@ -42,7 +42,7 @@ public class Listener80 extends Thread {
                 } else {
                     try {
                         // Abrir socket 80 para receber pedidos externos
-                        servidor = new Socket(addressServidor, 80); // só para uma conexão por servidor
+                        servidor = new Socket(addressServidor, 80);
                         System.out.println("Servidor escolhido: " + addressServidor.toString());
                         final InputStream streamFromServer = servidor.getInputStream();
                         final OutputStream streamToServer = servidor.getOutputStream();

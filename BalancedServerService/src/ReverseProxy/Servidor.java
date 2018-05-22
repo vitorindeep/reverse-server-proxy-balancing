@@ -6,7 +6,6 @@
 package ReverseProxy;
 
 import java.net.InetAddress;
-import java.util.Queue;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +21,7 @@ public class Servidor {
     CircularFifoQueue<Double> ramFifo; // fifo to store the last 12 ram values (1 minute)
     CircularFifoQueue<Double> bandwidthFifo; // fifo to store the last 12 bandwidth values (1 minute)
     int totalBandBytes;
-    int port, pacotesTotais, pacotesPerdidos, nrConexoesTCP, nrVezesRTT;
+    int pacotesTotais, pacotesPerdidos, nrConexoesTCP, nrVezesRTT;
     long lastSended, lastReceived;
 
     public InetAddress getAddress() {
