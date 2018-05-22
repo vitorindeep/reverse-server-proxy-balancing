@@ -18,9 +18,9 @@ public class Servidor {
 
     InetAddress address;
     long rtt;
-    double cpu;
-    Queue<Double> ramFifo; // fifo to store the last 12 ram values (1 minute)
-    Queue<Double> bandwidthFifo; // fifo to store the last 12 bandwidth values (1 minute)
+    CircularFifoQueue<Double> cpuFifo; // fifo to store the last 12 cpu values (1 minute)
+    CircularFifoQueue<Double> ramFifo; // fifo to store the last 12 ram values (1 minute)
+    CircularFifoQueue<Double> bandwidthFifo; // fifo to store the last 12 bandwidth values (1 minute)
     int totalBandBytes;
     int port, pacotesTotais, pacotesPerdidos, nrConexoesTCP, nrVezesRTT;
     long lastSended, lastReceived;
@@ -32,9 +32,9 @@ public class Servidor {
     public Servidor(InetAddress address) {
         this.address = address;
         rtt = 0;
-        cpu = 0;
-        ramFifo = new CircularFifoQueue<Double>(12);
-        bandwidthFifo = new CircularFifoQueue<Double>(12);
+        cpuFifo = new CircularFifoQueue<>(12);
+        ramFifo = new CircularFifoQueue<>(12);
+        bandwidthFifo = new CircularFifoQueue<>(12);
         totalBandBytes = 0;
         pacotesTotais = pacotesPerdidos = nrConexoesTCP = nrVezesRTT = 0;
         lastReceived = lastSended = 0;
@@ -45,38 +45,50 @@ public class Servidor {
     }
 
     // This is called by a thread that runs every 5 seconds
-    // to calculate the bandwidth used in that period of time
+    // to calculate the bandwidth used in that period of time and add it to FIFO
     public void shortBandwidth() {
         // calculate bandwidth over the last 5 seconds
         double bandwidth = totalBandBytes / 5;
-        // clean amount of bytes until now
+        // clean amount of bytes spent over the last 5 seconds
         totalBandBytes = 0;
 
         bandwidthFifo.add(bandwidth);
     }
 
     public double getAverageCpu() {
-        return cpu;
+
+        double total = 0;
+        int fifoSize = cpuFifo.size();
+
+        for (int i = 0; i < fifoSize; i++) {
+            total += cpuFifo.get(i);
+        }
+
+        return total / fifoSize;
     }
 
     public double getAverageRamLeft() {
-        double total = 0;
 
-        for (Double ram : ramFifo) {
-            total += ram;
+        double total = 0;
+        int fifoSize = ramFifo.size();
+
+        for (int i = 0; i < fifoSize; i++) {
+            total += ramFifo.get(i);
         }
 
-        return (total / 12);
+        return total / fifoSize;
     }
 
     public double getAverageBandwidth() {
-        double total = 0;
 
-        for (Double band : bandwidthFifo) {
-            total += band;
+        double total = 0;
+        int fifoSize = bandwidthFifo.size();
+
+        for (int i = 0; i < fifoSize; i++) {
+            total += bandwidthFifo.get(i);
         }
 
-        return (total / 12);
+        return total / fifoSize;
     }
 
     public void increaseBandBytes(int bytesRead) {
@@ -109,7 +121,7 @@ public class Servidor {
         lastReceived = System.nanoTime();
         long tempo = lastReceived - lastSended;
         rtt = (rtt * nrVezesRTT + tempo) / (++nrVezesRTT);
-        this.cpu = cpu;
+        cpuFifo.add(cpu);
         ramFifo.add(ram);
         lastSended = 0;
     }
@@ -129,8 +141,9 @@ public class Servidor {
     @Override
     public String toString() {
         return address.toString() + " / RTT: " + rtt
-                + " / CPUUsage: " + cpu
+                + " / CPUUsage: " + getAverageCpu()
                 + " / RAMLeft: " + getAverageRamLeft()
+                + " / Bandwidth: " + getAverageBandwidth()
                 + " / Conexoes: " + nrConexoesTCP
                 + " / Inativo há " + TimeUnit.NANOSECONDS.toSeconds((System.nanoTime() - lastReceived))
                 + " / Pacotes perdidos: " + pacotesPerdidos + "/" + pacotesTotais;
