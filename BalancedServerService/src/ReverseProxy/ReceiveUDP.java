@@ -52,6 +52,7 @@ public class ReceiveUDP extends Thread {
         try {
             while (true) {
                 receivePacket = new DatagramPacket(receiveData, receiveData.length);
+
                 // Ficar à espera pelos dados dos AgenteUDP
                 serverSocket.receive(receivePacket);
                 System.out.println("% MonitorUDP: Pacote recebido em ReceiveUDP.");
