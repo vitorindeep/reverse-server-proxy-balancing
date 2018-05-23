@@ -71,7 +71,7 @@ public class Tabela {
         }
     }
 
-    /* Melhor RTT */
+    /* Melhor RTT */ // -> A MODIFICAR PARA CALCULAR COM CPU E RAM TMB
     public synchronized InetAddress getBestServer() {
         InetAddress melhorAddress = null,
                 melhorAddressRtt = null,
@@ -80,6 +80,7 @@ public class Tabela {
                 melhorAddressBand = null;
         float rtt = -1;
         double ram = -1, cpu = -1, bandwidth = -1;
+        int melhorScore = -1;
 
         /*
          * Iniciar hashmap com par endereço,score
@@ -96,23 +97,23 @@ public class Tabela {
          * de rtt, CPU, RAM, Bandwidth.
          */
         for (Servidor servidor : this.listaServidores.values()) {
-            // Verificar melhor rtt
-            if (servidor.getRtt() < rtt || rtt < 0) {
+            // Verificar melhor rtt (menor é melhor)
+            if (servidor.getRtt() <= rtt || rtt < 0) {
                 melhorAddressRtt = servidor.getAddress();
                 rtt = servidor.getRtt();
             }
-            // Verificar melhor cpu
-            if (servidor.getAverageCpu() < cpu || cpu < 0) {
+            // Verificar melhor cpu (menos usado é melhor)
+            if (servidor.getAverageCpu() <= cpu || cpu < 0) {
                 melhorAddressCpu = servidor.getAddress();
                 cpu = servidor.getAverageCpu();
             }
-            // Verificar melhor ram
-            if (servidor.getAverageRamLeft() < ram || ram < 0) {
+            // Verificar melhor ram (mais disponível é melhor)
+            if (servidor.getAverageRamLeft() >= ram || ram < 0) {
                 melhorAddressRam = servidor.getAddress();
                 ram = servidor.getAverageRamLeft();
             }
             // Verificar melhor bandwidth
-            if (servidor.getAverageBandwidth() < bandwidth || bandwidth < 0) {
+            if (servidor.getAverageBandwidth() <= bandwidth || bandwidth < 0) {
                 melhorAddressBand = servidor.getAddress();
                 bandwidth = servidor.getAverageBandwidth();
             }
@@ -135,14 +136,13 @@ public class Tabela {
         // rtt
         currentValue = scoreMap.get(melhorAddressBand);
         scoreMap.remove(melhorAddressBand);
-        scoreMap.put(melhorAddressBand, 2 + currentValue);
+        scoreMap.put(melhorAddressBand, 8 + currentValue);
 
         // Encontrar melhorAddress
         for (Map.Entry<InetAddress, Integer> entry : scoreMap.entrySet()) {
-            int melhor = 0;
 
-            if (entry.getValue() > melhor) {
-                melhor = entry.getValue();
+            if (entry.getValue() > melhorScore) {
+                melhorScore = entry.getValue();
                 melhorAddress = entry.getKey();
             }
         }
@@ -153,6 +153,8 @@ public class Tabela {
             Servidor s = listaServidores.get(melhorAddress.toString());
             s.incrementaNrConexoes();
         }
+
+        scoreMap.clear();
 
         return melhorAddress;
     }
